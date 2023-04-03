@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { MouseEvent, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IPlace } from '../models/place.interface';
 import cn from 'classnames';
 import Loader from '../components/Loader';
 import Place from './Place';
 import PlaceService from '../services/place.service';
+import { UserContext } from '../context/UserContext';
+import { IUser } from '../models/user.interface';
 
 const Places = () => {
 	const navigate = useNavigate();
+	const user = useContext(UserContext) as IUser;
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	useEffect(() => {
 		fetchPlaces();
 	}, [])
 
-
 	function fetchPlaces () {
 		setIsLoading(true);
-		PlaceService.getUserPlaces()
+		PlaceService.getUserPlaces(user._id)
 			.then((places) => setPlaces(places))
 			.catch(err => console.log(err.message))
 			.finally(() => setIsLoading(false))
@@ -42,8 +44,20 @@ const Places = () => {
 	function handleRemoveAllClick () {
 		setIsLoading(true);
 		PlaceService.deleteAllPlaces()
-			.finally(() => setIsLoading(false));
-		fetchPlaces();
+			.finally(() => {
+				setIsLoading(false);
+				fetchPlaces();
+			});
+	}
+
+	function handleDeletePlace (id: string, e: MouseEvent<HTMLDivElement>) {
+		setIsLoading(true);
+		e.stopPropagation();
+		return PlaceService.deletePlaceById(id)
+			.finally(() => {
+				setIsLoading(false);
+				fetchPlaces();
+			});
 	}
 
 	return (
@@ -60,11 +74,11 @@ const Places = () => {
 							</svg>
 							Add New Place
 						</button>
-						<div className={cn({'mt-4 grid grid-cols-1 gap-4 md:grid-cols-3': !!places.length})}>
-							{!!places.length
+						<div className={cn({'mt-4 grid grid-cols-1 gap-4 md:grid-cols-3': !!places?.length})}>
+							{!!places?.length
 								? places.map((place) => (
 									<div key={place._id} onClick={() => handlePlaceClick(place._id)}>
-										<Place place={place}/>
+										<Place place={place} canDelete deletePlace={handleDeletePlace}/>
 									</div>
 								))
 								: <>
@@ -72,7 +86,7 @@ const Places = () => {
 									<img src="/nothing_here.avif" alt="nothing_here"/>
 								</>}
 						</div>
-						{!!places.length &&
+						{!!places?.length &&
                 <button onClick={handleRemoveAllClick} className="contained mt-3">Remove All Places</button>}
 					</div>
 				</div>

@@ -2,7 +2,7 @@ import { IPlace } from './place.interface';
 
 export interface IBooking {
 	_id: string;
-	place: IPlace | string;
+	place: IPlace;
 	checkIn: string;
 	checkOut: string;
 	guests: string;

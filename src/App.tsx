@@ -11,7 +11,7 @@ import { useLogout } from './hooks/useLogout';
 import NotFound from './pages/NotFound';
 import PlaceDetails from './pages/PlaceDetails';
 import useLocalStorage from './hooks/useLocalStorage';
-import CreatePlace from './pages/CreatePlace';
+import UserPlace from './pages/UserPlace';
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_API;
 
@@ -23,6 +23,7 @@ function App () {
 
 	if (storedUser) {
 		axios.defaults.headers.common['id'] = storedUser.id;
+		axios.defaults.headers.common['Authorization'] = `Bearer ${jwt.token}`;
 	}
 	useEffect(() => {
 		if (jwtExpiration) {
@@ -53,8 +54,8 @@ function App () {
 					<Route index path="/" element={<Home/>}></Route>
 					<Route path="/login" element={<Home/>}></Route>
 					<Route path="/user/:subpage?" element={<User/>}></Route>
-					<Route path="/user/places/create" element={<CreatePlace/>}></Route>
-					<Route path="/user/places/:id" element={<CreatePlace/>}></Route>
+					<Route path="/user/places/create" element={<UserPlace/>}></Route>
+					<Route path="/user/places/:id" element={<UserPlace/>}></Route>
 					<Route path="/places/:id" element={<PlaceDetails/>}></Route>
 					<Route path="/place/:id" element={<PlaceDetails/>}></Route>
 					<Route path="/register" element={<Home/>}></Route>

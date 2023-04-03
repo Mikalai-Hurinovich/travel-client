@@ -20,6 +20,7 @@ const Register: React.FC = (): JSX.Element => {
 				password
 			})
 			.then(({data}) => {
+				console.log(data)
 				navigate('/login');
 				navigate(0);
 			})

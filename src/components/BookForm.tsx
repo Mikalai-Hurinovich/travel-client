@@ -54,14 +54,17 @@ const BookForm: React.FC<BookFormProps> = ({place}): JSX.Element => {
 	async function handleSubmitBooking () {
 		await BookingService.createBooking({
 			...state,
-			place: place._id,
-			price: finalPrice
+			place: place._id as any,
+			price: finalPrice,
+			userId: user?._id
 		})
 			.then(() => {
 				alert('Your booking has been successfully saved!');
 				navigate('/user/bookings');
 			})
-			.catch(() => alert('Something went wrong!'))
+			.catch(({res}) => {
+				alert(res.data.message[0])
+			})
 	}
 
 	return (

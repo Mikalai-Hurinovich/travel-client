@@ -13,10 +13,10 @@ import PlaceService from '../services/place.service';
 import userService from '../services/place.service';
 import MainLayout from '../layouts/MainLayout';
 
-const CreatePlace = () => {
+const UserPlace = () => {
 	const navigate = useNavigate();
 	const {id: placeId} = useParams();
-	const {id: userId} = useContext(UserContext) as IUser;
+	const {_id: userId} = useContext(UserContext) as IUser;
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [photos, setPhotos] = useState<IPhoto[]>([]);
 	const [features, setFeatures] = useState<string[]>([]);
@@ -109,7 +109,7 @@ const CreatePlace = () => {
 		});
 		placePromise
 			.then(() => navigate('/user/places'))
-			.catch(error => alert('Something went wrong!'))
+			.catch(() => alert('Something went wrong!'))
 			.finally(() => setIsLoading(false));
 	}
 
@@ -211,4 +211,4 @@ const CreatePlace = () => {
 	);
 };
 
-export default CreatePlace;
+export default UserPlace;
