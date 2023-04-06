@@ -7,7 +7,7 @@ import { IUser } from '../models/user.interface';
 import Loader from '../components/Loader';
 import Booking from '../components/Booking';
 
-const Bookings = () => {
+const Bookings: React.FC = (): JSX.Element => {
 	const {_id: userId} = useContext(UserContext) as IUser;
 	const [bookings, setBookings] = useState<IBooking[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);

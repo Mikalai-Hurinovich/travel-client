@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import PlaceService from '../services/place.service';
 import useDebounce from '../hooks/useDebounce';
 
-const SearchForm = () => {
+const SearchForm: React.FC = (): JSX.Element => {
 	const [isInputExpanded, setIsInputExpanded] = useState<boolean>(false);
 	const [searchResults, setSearchResults] = useState<IPlace[] | null>(null);
 	const navigate = useNavigate();

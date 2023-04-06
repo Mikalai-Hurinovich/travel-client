@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const NotFound = () => {
+const NotFound: React.FC = (): JSX.Element => {
 	const navigate = useNavigate();
 	const [loaded, setLoaded] = useState(false);
 

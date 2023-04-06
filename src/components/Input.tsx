@@ -25,7 +25,7 @@ const Input: React.FC<IInput> = (
 		required = false,
 		type = 'text',
 		value,
-	}) => {
+	}): JSX.Element => {
 	return (
 		<>
 			{header && <h2 className="text-xl text-primary">{header}</h2>}

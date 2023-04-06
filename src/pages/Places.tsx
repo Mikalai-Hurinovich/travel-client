@@ -8,7 +8,7 @@ import PlaceService from '../services/place.service';
 import { UserContext } from '../context/UserContext';
 import { IUser } from '../models/user.interface';
 
-const Places = () => {
+const Places: React.FC = (): JSX.Element => {
 	const navigate = useNavigate();
 	const user = useContext(UserContext) as IUser;
 	const [isLoading, setIsLoading] = useState<boolean>(false);

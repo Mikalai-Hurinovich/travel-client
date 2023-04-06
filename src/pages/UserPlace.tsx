@@ -13,7 +13,7 @@ import PlaceService from '../services/place.service';
 import userService from '../services/place.service';
 import MainLayout from '../layouts/MainLayout';
 
-const UserPlace = () => {
+const UserPlace: React.FC = (): JSX.Element => {
 	const navigate = useNavigate();
 	const {id: placeId} = useParams();
 	const {_id: userId} = useContext(UserContext) as IUser;
