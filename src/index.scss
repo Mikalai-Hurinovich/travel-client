@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.logoContainer {
+  font-family: 'Edu NSW ACT Foundation', cursive;
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+}
+
+input[type="email"], input[type="password"], input[type="text"], input[type="number"], input[type="tel"], textarea {
+  @apply w-full border border-primary my-2 py-2 px-3 rounded-2xl;
+}
+
+button {
+  @apply transition-all border-2 border-primary rounded-full py-2 px-3 text-primary bg-white hover:bg-primary hover:text-white active:bg-active ;
+}
+
+
+button.contained {
+  @apply transition-all bg-primary text-white hover:bg-hover active:bg-active;
+}
+
+button:disabled {
+  @apply bg-gray-400 border-gray-500 active:bg-gray-400 hover:bg-gray-400
+}
+
+:root {
+  //--black: #3B434E;
+  //--gray-light: #EBEBEB;
+  //--gray: #A4A4A4;
+  //--gray-dark: #6C7077;
+  //--white: white;
+  //--primary: #4682B4;
+  //--primary-hover: #255c86;
+  //--primary-active: #0f4164;
+  //--primary-hover: #6344DF;
+  //--red-light: #FEA291;
+  //--red: #FC836D;
+  //--alert: #DE0000;
+  //--green: #007B48;
+  //--green-light: #C8F8E4;
+  //--font-family: 'Roboto', sans-serif;
+}
+
+
