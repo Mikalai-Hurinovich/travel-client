@@ -7,7 +7,7 @@ interface IPlaceProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, 
 	deletePlace?: (id: string, e: MouseEvent<HTMLDivElement>) => void
 }
 
-const Place: React.FC<IPlaceProps> = ({place, canDelete, deletePlace, ...props}) => {
+const Place: React.FC<IPlaceProps> = ({place, canDelete, deletePlace, ...props}): JSX.Element => {
 	return (
 		<div className="cursor-pointer gap-1 flex flex-col relative">
 			<img className="rounded-2xl"

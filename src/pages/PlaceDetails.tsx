@@ -7,7 +7,7 @@ import Features from '../components/Features';
 import BookForm from '../components/BookForm';
 import PlaceService from '../services/place.service';
 
-const PlaceDetails = () => {
+const PlaceDetails: React.FC = (): JSX.Element => {
 	const {id} = useParams();
 	const [place, setPlace] = useState<IPlace>({} as IPlace);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
