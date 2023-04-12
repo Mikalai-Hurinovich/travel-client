@@ -11,7 +11,7 @@ const Place: React.FC<IPlaceProps> = ({place, canDelete, deletePlace, ...props})
 	return (
 		<div className="cursor-pointer gap-1 flex flex-col relative">
 			<img className="rounded-2xl"
-					 src={place?.photos.find(p => p.main)?.path || place?.photos[0].path}
+					 src={place?.photos.find(p => p.main)?.path || place?.photos[0]?.path}
 					 alt="placePhoto"/>
 			{canDelete && deletePlace &&
           <div className="absolute top-1 right-1 z-10 bg-white bg-opacity-80 rounded-full text-primary p-2"

@@ -20,7 +20,7 @@ const Bookings: React.FC = (): JSX.Element => {
 		setIsLoading(true);
 		BookingService.findAllUserBookings(id)
 			.then((data) => {
-				setBookings(data)
+				setBookings(data.reverse())
 			})
 			.catch(e => console.log(e.message))
 			.finally(() => setIsLoading(false))

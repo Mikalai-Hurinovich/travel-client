@@ -83,7 +83,9 @@ const Places: React.FC = (): JSX.Element => {
 								))
 								: <>
 									<h2 className="text-2xl text-primary mt-4">Nothing Here... Start by adding a new place!</h2>
-									<img src="/nothing_here.avif" alt="nothing_here"/>
+									<span className="text-black">
+										<img src="/nothing_here.svg" alt="nothing_here" className="dark"/>
+									</span>
 								</>}
 						</div>
 						{!!places?.length &&

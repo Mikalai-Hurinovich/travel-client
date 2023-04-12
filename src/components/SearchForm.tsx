@@ -1,23 +1,27 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { IPlace } from '../models/place.interface';
 import { useNavigate } from 'react-router-dom';
 import PlaceService from '../services/place.service';
 import useDebounce from '../hooks/useDebounce';
+import Input from './shared/Input';
+import { useForm } from 'react-hook-form';
+import { ThemeContext } from '../context/ThemeContext';
 
 const SearchForm: React.FC = (): JSX.Element => {
 	const [isInputExpanded, setIsInputExpanded] = useState<boolean>(false);
 	const [searchResults, setSearchResults] = useState<IPlace[] | null>(null);
 	const navigate = useNavigate();
-	const [searchTerm, setSearchTerm] = useState('');
-	const debouncedSearchTerm = useDebounce(searchTerm, 500);
-
+	const theme = useContext(ThemeContext);
+	const {register, setValue, watch} = useForm();
+	const watchedSearchTerm = watch('searchTerm');
+	const debouncedSearchTerm = useDebounce(watchedSearchTerm, 500);
 	useEffect(() => {
 		if (debouncedSearchTerm) {
 			search(debouncedSearchTerm);
 		}
 	}, [debouncedSearchTerm]);
 	const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-		setSearchTerm(event.target.value);
+		setValue('searchTerm', event.target.value);
 	};
 
 	function search (searchTerm: string) {
@@ -25,23 +29,27 @@ const SearchForm: React.FC = (): JSX.Element => {
 			.then(data => setSearchResults(data));
 	}
 
-
 	function handlePlaceClick (id: string): void {
 		navigate(`/places/${id}`);
 	}
 
 	function onInputToggle () {
 		setIsInputExpanded(value => !value);
-		setSearchTerm('');
+		setValue('searchTerm', '');
 	}
 
 	return (
 		<>
 			{isInputExpanded ?
 				<div
-					className="flex rounded-full md:w-5/12 9/12 items-center gap-2.5 px-4">
+					className="flex rounded-full md:w-3/12 6/12 items-center gap-2.5">
 					<div className="relative w-full">
-						<input type="text" onChange={handleSearch} value={searchTerm}/>
+						<Input type="text"
+									 register={register('searchTerm')}
+									 id="searchTerm"
+									 placeholder="Search places..."
+									 onChange={handleSearch}
+									 name="searchTerm"/>
 						<span className="text-primary absolute top-4 right-3 cursor-pointer" onClick={onInputToggle}>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
 								 stroke="currentColor"
@@ -51,25 +59,25 @@ const SearchForm: React.FC = (): JSX.Element => {
 					</span>
 						{debouncedSearchTerm && !!searchResults?.length &&
                 <div
-                    className="w-1/3 z-50 w-full absolute border l-50 t-50 bg-white rounded-2xl p-3">
+                    className={`w-1/3 z-50 w-full absolute border l-50 t-50 rounded-2xl p-3 ${theme}`}>
 									{searchResults.map(place =>
 										<div key={place._id} onClick={() => handlePlaceClick(place._id)}
 												 className="border-b-2 py-2 first:pt-0 last:border-none last:pb-0 cursor-pointer">
 											{place.title}
-											<span className="text-gray-400 ml-4">{place.address}</span>
+											<div className="text-gray-400">{place.address}</div>
 										</div>
 									)}
                 </div>}
 						{debouncedSearchTerm && searchResults?.length === 0 &&
                 <div
-                    className="w-1/3 z-50 w-full absolute border l-50 t-50 bg-white rounded-2xl p-3">
+                    className="w-1/3 z-50 w-full absolute border l-50 t-50 rounded-2xl p-3">
                     Nothing found...
                 </div>
 						}
 					</div>
 				</div>
 				:
-				<div className="flex items-center justify-center">
+				<div className="flex items-center my-2 pt-0.5 justify-center">
 					<button className="flex gap-2 items-center justify-center cursor-pointer bg-primary text-white py-1.5 px-4"
 									onClick={onInputToggle}>
 						Search Places

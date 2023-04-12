@@ -7,6 +7,9 @@ import jwt_decode from 'jwt-decode';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useForm, } from 'react-hook-form';
 import ErrorMessage from '../components/ErrorMessage';
+import Input from '../components/shared/Input';
+import Modal from '../components/shared/Modal';
+import { useModal } from '../hooks/useModal';
 
 type FormInputsTypes = {
 	email: string,
@@ -18,8 +21,9 @@ const Login: React.FC = (): JSX.Element => {
 	const [user, setUser] = useLocalStorage('user', null);
 	const navigate = useNavigate();
 	const {register, getValues, formState: {errors, isValid}, trigger} = useForm<FormInputsTypes>({mode: 'onChange'});
+	const {open, toggleOpen, data, setData} = useModal();
 
-	function handleFormSubmit (e: MouseEvent) {
+	function handleLogin (e: MouseEvent) {
 		e.preventDefault();
 		const {email, password} = getValues();
 		AuthService
@@ -36,18 +40,23 @@ const Login: React.FC = (): JSX.Element => {
 				navigate('/');
 				navigate(0);
 			})
-			.catch((response) => alert(response));
+			.catch(({response}) => {
+				toggleOpen(true);
+				setData({
+					title: 'Error!', children: response?.data?.message
+				});
+			});
 	}
 
 	return (
 		<MainLayout title="Login" className="flex">
 			<div className="grow flex flex-col items-center justify-center  mb-32">
-				<h1 className="text-3xl text-center text-primary">Login</h1>
-				<form className="mt-2 max-w-xs w-2/3">
-					<input type="email"
+				<h1 className="text-3xl text-primary mb-2">Login Form</h1>
+				<form className="mt-2 max-w-xs w-2/3  gap-2.5">
+					<Input type="email"
 								 id="email"
 								 placeholder="Your Email"
-								 {...register('email', {required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i})}
+								 register={register('email', {required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i})}
 								 name="email"
 								 onBlur={() => trigger('email')}/>
 					{errors.email && errors.email.type === 'required' && (
@@ -56,10 +65,10 @@ const Login: React.FC = (): JSX.Element => {
 					{errors.email && errors.email.type === 'pattern' && (
 						<ErrorMessage text="Invalid email format"/>
 					)}
-					<input type="password"
+					<Input type="password"
 								 id="password"
 								 placeholder="Your Password"
-								 {...register('password', {required: true, minLength: 3})}
+								 register={register('password', {required: true, minLength: 3})}
 								 name="password"
 								 onBlur={() => trigger('password')}/>
 					{errors.password && errors.password.type === 'required' && (
@@ -71,10 +80,19 @@ const Login: React.FC = (): JSX.Element => {
 					<div className="text-right text-gray-500 mr-2">Don't have an account?
 						<Link className="text-primary" to="/register"> Register</Link>
 					</div>
-					<button className="min-w-full contained mt-2" disabled={!isValid} onClick={(e) => handleFormSubmit(e)}>Login
+					<button className="w-full contained mt-2" disabled={!isValid} onClick={(e) => handleLogin(e)}>
+						Login
 					</button>
 				</form>
 			</div>
+			<Modal
+				title={data?.title}
+				isOpenProp={open}
+				onClose={toggleOpen}
+				onOk={toggleOpen}
+			>
+				{data?.children}
+			</Modal>
 		</MainLayout>
 	);
 };

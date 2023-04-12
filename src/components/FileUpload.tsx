@@ -24,6 +24,7 @@ const FileUpload: React.FC<FileUploadProps> = ({setFile, accept, setPhotosLoadin
 					return [...files, ...data]
 				})
 			})
+			.catch(err => console.warn(err))
 			.finally(() => setPhotosLoading(false))
 
 	}

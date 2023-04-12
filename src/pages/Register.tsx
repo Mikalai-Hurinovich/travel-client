@@ -4,6 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 import { useForm } from 'react-hook-form';
 import ErrorMessage from '../components/ErrorMessage';
+import Input from '../components/shared/Input';
+import { useModal } from '../hooks/useModal';
+import Modal from '../components/shared/Modal';
 
 type FormInputsTypes = {
 	name: string,
@@ -17,6 +20,7 @@ const Register: React.FC = (): JSX.Element => {
 	const {register, getValues, watch, formState: {errors, isValid, dirtyFields}, trigger} = useForm<FormInputsTypes>({
 		mode: 'onChange'
 	});
+	const {open, toggleOpen, data, setData} = useModal();
 
 	function handleFormSubmit (e: React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
@@ -33,7 +37,10 @@ const Register: React.FC = (): JSX.Element => {
 				navigate('/login');
 				navigate(0);
 			})
-			.catch(({response}) => alert(response.data.message))
+			.catch(({response}) => {
+				toggleOpen(true);
+				setData({title: 'Error!', children: response.data.message})
+			})
 	}
 
 	function arePasswordsValid (): boolean {
@@ -43,10 +50,10 @@ const Register: React.FC = (): JSX.Element => {
 	return (
 		<MainLayout title="Login" className="flex">
 			<div className="grow flex flex-col items-center justify-center  mb-32">
-				<h1 className="text-3xl text-center text-primary">Register</h1>
-				<form className="mt-2 max-w-xs">
-					<input type="text"
-								 {...register('name', {required: true})}
+				<h1 className="text-3xl text-center text-primary">Register Form</h1>
+				<form className="mt-2 max-w-xs w-2/3">
+					<Input type="text"
+								 register={register('name', {required: true})}
 								 id="name"
 								 name="name"
 								 placeholder="Your Name"
@@ -55,8 +62,8 @@ const Register: React.FC = (): JSX.Element => {
 					{errors.name && errors.name.type === 'required' && (
 						<ErrorMessage text="Name is required"/>
 					)}
-					<input type="email"
-								 {...register('email', {required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i})}
+					<Input type="email"
+								 register={register('email', {required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i})}
 								 id="email"
 								 name="email"
 								 placeholder="Your Email"
@@ -68,8 +75,8 @@ const Register: React.FC = (): JSX.Element => {
 					{errors.email && errors.email.type === 'pattern' && (
 						<ErrorMessage text="Invalid email format"/>
 					)}
-					<input type="password"
-								 {...register('password', {
+					<Input type="password"
+								 register={register('password', {
 									 required: true,
 									 minLength: 3,
 									 validate: (value) => value === watch('confirmPassword')
@@ -85,8 +92,11 @@ const Register: React.FC = (): JSX.Element => {
 					{errors.password && errors.password.type === 'minLength' && (
 						<ErrorMessage text="Password must be at least 3 characters"/>
 					)}
-					<input type="password"
-								 {...register('confirmPassword', {required: true, validate: (value) => value === watch('password')})}
+					<Input type="password"
+								 register={register('confirmPassword', {
+									 required: true,
+									 validate: (value) => value === watch('password')
+								 })}
 								 id="confirmPassword"
 								 name="confirmPassword"
 								 placeholder="Confirm Your Password"
@@ -101,12 +111,20 @@ const Register: React.FC = (): JSX.Element => {
 					<div className="text-right text-gray-500 mr-2">Do you have an account?
 						<Link className="text-primary" to="/login"> Login</Link>
 					</div>
-					<button onClick={e => handleFormSubmit(e)} className="min-w-full contained mt-2"
+					<button onClick={e => handleFormSubmit(e)} className="w-full contained mt-2"
 									disabled={!isValid}>
 						Register
 					</button>
 				</form>
 			</div>
+			<Modal
+				title={data?.title}
+				isOpenProp={open}
+				onClose={toggleOpen}
+				onOk={toggleOpen}
+			>
+				{data?.children}
+			</Modal>
 		</MainLayout>
 	);
 };

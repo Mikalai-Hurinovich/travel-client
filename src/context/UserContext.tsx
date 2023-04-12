@@ -3,10 +3,10 @@ import useLocalStorage from '../hooks/useLocalStorage';
 
 export const UserContext = createContext({});
 
-export interface UserContextProvider extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+export interface IUserContextProvider extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
 }
 
-const UserContextProvider: React.FC<UserContextProvider> = ({children}) => {
+const UserContextProvider: React.FC<IUserContextProvider> = ({children}) => {
 	const [user] = useLocalStorage('user', null)
 	return (
 		<UserContext.Provider value={user}>
