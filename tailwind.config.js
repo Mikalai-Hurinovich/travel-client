@@ -8,8 +8,10 @@ module.exports = {
             colors: {
                 primary: '#4682B4',
                 hover: '#255c86',
-                active: '#0f4164'
-            }
+                active: '#0f4164',
+                dark: '#0F172A',
+                light: '#ffffff'
+            },
         },
         screens: {
             'xxs': '375px',
@@ -19,6 +21,9 @@ module.exports = {
             'lg': '1024px',
             'xl': '1280px',
             '2xl': '1536px',
+        },
+        minWidth: {
+            '100': '100px',
         }
     },
     plugins: [],

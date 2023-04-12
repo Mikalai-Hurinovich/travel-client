@@ -22,9 +22,9 @@ const Features: React.FC<IFeatures> = ({selectedFeatures, onChange, readonly = f
 	}
 
 	return (
-		<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2">
+		<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2 text-primary">
 			{(readonly && isFeatureSelected('kitchen') || !readonly) &&
-          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 bg-white">
+          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 border border-primary">
               <label className="sr-only" htmlFor="kitchen">Kitchen</label>
 						{!readonly &&
                 <input checked={isFeatureSelected('kitchen')} className="mr-1" type="checkbox" id="kitchen"
@@ -37,7 +37,7 @@ const Features: React.FC<IFeatures> = ({selectedFeatures, onChange, readonly = f
               <span>Kitchen</span>
           </div>}
 			{(readonly && isFeatureSelected('wifi') || !readonly) &&
-          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 bg-white">
+          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 border border-primary">
               <label className="sr-only" htmlFor="wifi">wifi</label>
 						{!readonly && <input checked={isFeatureSelected('wifi')} className="mr-1" type="checkbox" id="wifi"
                                  onChange={(e) => handleClick(e)}/>}
@@ -49,7 +49,7 @@ const Features: React.FC<IFeatures> = ({selectedFeatures, onChange, readonly = f
               <span>Wifi</span>
           </div>}
 			{(readonly && isFeatureSelected('tv') || !readonly) &&
-          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 bg-white">
+          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 border border-primary">
               <label className="sr-only" htmlFor="tv">tv</label>
 						{!readonly && <input checked={isFeatureSelected('tv')} className="mr-1" type="checkbox" id="tv"
                                  onChange={(e) => handleClick(e)}/>}
@@ -61,7 +61,7 @@ const Features: React.FC<IFeatures> = ({selectedFeatures, onChange, readonly = f
               <span>TV</span>
           </div>}
 			{(readonly && isFeatureSelected('workspace') || !readonly) &&
-          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 bg-white">
+          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 border border-primary">
               <label className="sr-only" htmlFor="workspace">workspace</label>
 						{!readonly &&
                 <input checked={isFeatureSelected('workspace')} className="mr-1" type="checkbox" id="workspace"
@@ -74,7 +74,7 @@ const Features: React.FC<IFeatures> = ({selectedFeatures, onChange, readonly = f
               <span>Workspace</span>
           </div>}
 			{(readonly && isFeatureSelected('shopping') || !readonly) &&
-          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 bg-white">
+          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 border border-primary">
               <label className="sr-only" htmlFor="shopping">shopping</label>
 						{!readonly &&
                 <input checked={isFeatureSelected('shopping')} className="mr-1" type="checkbox" id="shopping"
@@ -87,7 +87,7 @@ const Features: React.FC<IFeatures> = ({selectedFeatures, onChange, readonly = f
               <span>Shopping</span>
           </div>}
 			{(readonly && isFeatureSelected('ac') || !readonly) &&
-          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 bg-white">
+          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 border border-primary">
               <label className="sr-only" htmlFor="ac">ac</label>
 						{!readonly && <input checked={isFeatureSelected('ac')} className="mr-1" type="checkbox" id="ac"
                                  onChange={(e) => handleClick(e)}/>}
@@ -103,7 +103,7 @@ const Features: React.FC<IFeatures> = ({selectedFeatures, onChange, readonly = f
               <span>AC</span>
           </div>}
 			{(readonly && isFeatureSelected('dryer') || !readonly) &&
-          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 bg-white">
+          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 border border-primary">
               <label className="sr-only" htmlFor="dryer">dryer</label>
 						{!readonly &&
                 <input checked={isFeatureSelected('dryer')} className="mr-1" type="checkbox" id="dryer"
@@ -126,7 +126,7 @@ const Features: React.FC<IFeatures> = ({selectedFeatures, onChange, readonly = f
               <span>Dryer</span>
           </div>}
 			{(readonly && isFeatureSelected('washer') || !readonly) &&
-          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 bg-white">
+          <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 border border-primary">
               <label className="sr-only" htmlFor="washer">washer</label>
 						{!readonly &&
                 <input checked={isFeatureSelected('washer')} className="mr-1" type="checkbox" id="washer"
@@ -147,7 +147,8 @@ const Features: React.FC<IFeatures> = ({selectedFeatures, onChange, readonly = f
                   <path d="M4 4.01C9.333 9.333 14.667 9.33 20 4"/>
               </svg>
               <span>Washer</span>
-          </div>}
+          </div>
+			}
 		</div>
 	);
 };

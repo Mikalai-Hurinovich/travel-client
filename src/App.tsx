@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import axios from 'axios';
 import Home from './pages/Home';
 import UserContextProvider from './context/UserContext';
 import AuthService from './services/auth.service';
@@ -12,8 +11,10 @@ import NotFound from './pages/NotFound';
 import PlaceDetails from './pages/PlaceDetails';
 import useLocalStorage from './hooks/useLocalStorage';
 import UserPlace from './pages/UserPlace';
+import ThemeContextProvider from './context/ThemeContext';
+import { setBaseUrl, setDefaultToken } from './config/axios';
 
-axios.defaults.baseURL = process.env.REACT_APP_BASE_API;
+setBaseUrl();
 
 function App () {
 	const {logout} = useLogout();
@@ -22,8 +23,9 @@ function App () {
 	const [jwtExpiration, setJwtExpiration] = useLocalStorage('jwtExpiration', null)
 
 	if (jwt && storedUser) {
-		axios.defaults.headers.common['Authorization'] = `Bearer ${jwt.token}`;
+		setDefaultToken(jwt.token);
 	}
+
 	useEffect(() => {
 		if (jwtExpiration) {
 			if (Date.now() > jwtExpiration) {
@@ -48,23 +50,25 @@ function App () {
 
 	return (
 		<UserContextProvider>
-			{jwt
-				? <Routes>
-					<Route index path="/" element={<Home/>}></Route>
-					<Route path="/login" element={<Home/>}></Route>
-					<Route path="/user/:subpage?" element={<User/>}></Route>
-					<Route path="/user/places/create" element={<UserPlace/>}></Route>
-					<Route path="/user/places/:id" element={<UserPlace/>}></Route>
-					<Route path="/places/:id" element={<PlaceDetails/>}></Route>
-					<Route path="/place/:id" element={<PlaceDetails/>}></Route>
-					<Route path="/register" element={<Home/>}></Route>
-					<Route path="/404" element={<NotFound/>}></Route>
-					<Route path="*" element={<Navigate to={'/404'}/>}></Route>
-				</Routes>
-				: <Routes>
-					<Route path="/register" element={<Register/>}></Route>
-					<Route path="*" element={<Login/>}></Route>
-				</Routes>}
+			<ThemeContextProvider>
+				{jwt
+					? <Routes>
+						<Route index path="/" element={<Home/>}></Route>
+						<Route path="/login" element={<Home/>}></Route>
+						<Route path="/user/:subpage?" element={<User/>}></Route>
+						<Route path="/user/places/create" element={<UserPlace/>}></Route>
+						<Route path="/user/places/:id" element={<UserPlace/>}></Route>
+						<Route path="/places/:id" element={<PlaceDetails/>}></Route>
+						<Route path="/place/:id" element={<PlaceDetails/>}></Route>
+						<Route path="/register" element={<Home/>}></Route>
+						<Route path="/404" element={<NotFound/>}></Route>
+						<Route path="*" element={<Navigate to={'/404'}/>}></Route>
+					</Routes>
+					: <Routes>
+						<Route path="/register" element={<Register/>}></Route>
+						<Route path="*" element={<Login/>}></Route>
+					</Routes>}
+			</ThemeContextProvider>
 		</UserContextProvider>
 	);
 }

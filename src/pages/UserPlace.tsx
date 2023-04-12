@@ -1,5 +1,4 @@
 import React, { FormEvent, MouseEvent, useContext, useEffect, useState } from 'react';
-import Input from '../components/Input';
 import FileUpload from '../components/FileUpload';
 import Features from '../components/Features';
 import { IPhoto } from '../models/photo.interface';
@@ -12,6 +11,8 @@ import cn from 'classnames';
 import PlaceService from '../services/place.service';
 import userService from '../services/place.service';
 import MainLayout from '../layouts/MainLayout';
+import Input from '../components/shared/Input';
+import { useForm } from 'react-hook-form';
 
 const UserPlace: React.FC = (): JSX.Element => {
 	const navigate = useNavigate();
@@ -21,36 +22,27 @@ const UserPlace: React.FC = (): JSX.Element => {
 	const [arePhotosLoading, setPhotosLoading] = useState<boolean>(false);
 	const [photos, setPhotos] = useState<IPhoto[]>([]);
 	const [features, setFeatures] = useState<string[]>([]);
-	const [formState, setFormState] = useState({
-		title: '',
-		address: '',
-		description: '',
-		price: 0,
-		checkIn: '',
-		checkOut: '',
-		maxGuests: '4',
+	const {
+		register,
+		getValues,
+		setValue,
+		trigger
+	} = useForm({
+		mode: 'all'
 	});
+
 	useEffect(() => {
 		if (!placeId) {
 			return;
 		}
 		setIsLoading(true);
 		PlaceService.getPlaceById(placeId)
-			.then(data => {
-				const {
-					title,
-					address,
-					photos,
-					description,
-					features,
-					price,
-					checkIn,
-					checkOut,
-					maxGuests
-				} = data;
-				setFormState(prevState => ({...prevState, title, price, address, description, checkIn, checkOut, maxGuests}))
-				setPhotos(photos);
-				setFeatures(features);
+			.then((data) => {
+				for (let name in data) {
+					setValue(name, (data as any)[name])
+				}
+				setPhotos(data.photos);
+				setFeatures(data.features);
 			})
 			.catch(e => console.warn(e.message))
 			.finally(() => setIsLoading(false))
@@ -58,10 +50,8 @@ const UserPlace: React.FC = (): JSX.Element => {
 
 	const handleFormFieldChange = React.useCallback((event: React.ChangeEvent<any>) => {
 		const {name, value} = event.target;
-		setFormState((prevState) => ({
-			...prevState,
-			[name]: value
-		}));
+		setValue(name, value);
+		return trigger(name);
 	}, []);
 
 	function handlePhotoDelete (id: string, e: MouseEvent<HTMLSpanElement>) {
@@ -88,16 +78,25 @@ const UserPlace: React.FC = (): JSX.Element => {
 		if (photos.length >= 10) {
 			return alert('Max 10 photos available!')
 		}
+		const {
+			title,
+			address,
+			price,
+			description,
+			checkIn,
+			checkOut,
+			maxGuests
+		} = getValues();
 		const data: Partial<IPlace> = {
 			photos: photos,
 			features: features.map(feature => feature),
-			title: formState.title,
-			address: formState.address,
-			price: +formState.price,
-			description: formState.description,
-			checkIn: formState.checkIn,
-			checkOut: formState.checkOut,
-			maxGuests: formState.maxGuests,
+			title,
+			address,
+			price: +price,
+			description,
+			checkIn,
+			checkOut,
+			maxGuests,
 			owner: userId,
 		}
 		const placePromise = new Promise((res, rej) => {
@@ -126,12 +125,22 @@ const UserPlace: React.FC = (): JSX.Element => {
 		<MainLayout>
 			<form className="max-w-3xl mx-auto mt-10" onSubmit={(e) => handleSubmitForm(e)}>
 				<h1 className="text-2xl mb-2 text-primary">{placeId ? 'Update Place' : 'Create New Place'}</h1>
-				<Input description="Your place name" header="Place Title" placeholder="Title" name="title"
-							 value={formState.title}
-							 onChange={e => handleFormFieldChange(e)}/>
-				<Input description="Your place address (city, street, etc.)" header="Place Address" name="address"
+				<Input header="Place title"
+							 description="Your place name"
+							 className="w-full my-2 p-2 border rounded-2xl"
+							 onChange={handleFormFieldChange}
+							 placeholder="Title"
+							 register={register('title', {required: true})}
+							 id="title"
+							 name="title"/>
+				<Input header="Place address"
+							 description="Your place address (city, street, etc.)"
+							 className="w-full my-2 p-2 border rounded-2xl"
+							 onChange={handleFormFieldChange}
 							 placeholder="Address"
-							 value={formState.address} onChange={handleFormFieldChange}/>
+							 register={register('address', {required: true})}
+							 id="address"
+							 name="address"/>
 				<div className="flex items-center justify-between">{getInputDescription('Photos',
 					'Upload best photos of your place (max 10)')}
 					<FileUpload setFile={setPhotos} setPhotosLoading={setPhotosLoading} accept="image/*">
@@ -183,27 +192,53 @@ const UserPlace: React.FC = (): JSX.Element => {
 				</div>
 				{getInputDescription('Description',
 					'Add some details about your place')}
-				<textarea name="description" value={formState.description} placeholder="Description" rows={5}
+				<textarea {...register('description', {required: true})}
+									name="description"
+									id="description"
+									placeholder="Description"
+									rows={5}
 									onChange={handleFormFieldChange}/>
 				{getInputDescription('Features',
 					'Choose some features from the list below')}
 				<Features onChange={setFeatures} selectedFeatures={features}/>
 				<div>
-					{getInputDescription('Price',
-						'Here you can add a price per night in your place')}
-					<input type="number" name="price" placeholder="Price" onChange={handleFormFieldChange}
-								 value={formState.price}/>
+					<Input header="Price"
+								 description="Here you can add a price per night in your place"
+								 className="w-full my-2 p-2 border rounded-2xl"
+								 onChange={handleFormFieldChange}
+								 placeholder="Price"
+								 register={register('price', {required: true})}
+								 id="price"
+								 name="price"/>
 				</div>
 				<div>
 					{getInputDescription('Timing & synchronization',
 						'Set check-in and check-out time, maximum number of guests')}
 					<div className="grid grid-cols-1  sm:grid-cols-3 gap-2">
-						<input type="number" name="checkIn" placeholder="Check In Time" onChange={handleFormFieldChange}
-									 value={formState.checkIn}/>
-						<input type="number" name="checkOut" placeholder="Check Out Time" onChange={handleFormFieldChange}
-									 value={formState.checkOut}/>
-						<input type="number" name="maxGuests" placeholder="Max Guests" value={formState.maxGuests}
-									 onChange={handleFormFieldChange}/>
+						<Input header="Check In"
+									 description="Set check-in time"
+									 className="w-full my-2 p-2 border rounded-2xl"
+									 onChange={handleFormFieldChange}
+									 placeholder="CheckIn"
+									 register={register('checkIn', {required: true})}
+									 id="checkIn"
+									 name="checkIn"/>
+						<Input header="Check Out"
+									 description="Set check-out time"
+									 className="w-full my-2 p-2 border rounded-2xl"
+									 onChange={handleFormFieldChange}
+									 placeholder="Check Out"
+									 register={register('checkOut', {required: true})}
+									 id="checkOut"
+									 name="checkOut"/>
+						<Input header="Max Guests"
+									 description="Maximum number of guests"
+									 className="w-full my-2 p-2 border rounded-2xl"
+									 onChange={handleFormFieldChange}
+									 placeholder="Max Guests"
+									 register={register('maxGuests', {required: true})}
+									 id="maxGuests"
+									 name="maxGuests"/>
 					</div>
 				</div>
 				<button className="contained w-full my-3" disabled={arePhotosLoading}>Submit</button>

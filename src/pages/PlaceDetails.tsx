@@ -57,7 +57,7 @@ const PlaceDetails: React.FC = (): JSX.Element => {
 
 
 	return (
-		<MainLayout className="bg-blue-50 flex flex-col items-center">
+		<MainLayout className="flex flex-col items-center">
 			<div className="mt-8 w-2/3">
 				<h1 className="text-3xl">{place.title}</h1>
 				<div className="text-primary">
