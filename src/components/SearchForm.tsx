@@ -6,9 +6,12 @@ import useDebounce from '../hooks/useDebounce';
 import Input from './shared/Input';
 import { useForm } from 'react-hook-form';
 import { ThemeContext } from '../context/ThemeContext';
+import Features from './Features';
 
 const SearchForm: React.FC = (): JSX.Element => {
 	const [isInputExpanded, setIsInputExpanded] = useState<boolean>(false);
+	const [filterOpen, setFilterOpen] = useState<boolean>(false);
+	const [features, setFeatures] = useState<string[]>([]);
 	const [searchResults, setSearchResults] = useState<IPlace[] | null>(null);
 	const navigate = useNavigate();
 	const theme = useContext(ThemeContext);
@@ -21,11 +24,12 @@ const SearchForm: React.FC = (): JSX.Element => {
 		}
 	}, [debouncedSearchTerm]);
 	const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+		setFilterOpen(false)
 		setValue('searchTerm', event.target.value);
 	};
 
 	function search (searchTerm: string) {
-		PlaceService.searchPlaces(searchTerm, 5)
+		PlaceService.searchPlaces(searchTerm, 5, features)
 			.then(data => setSearchResults(data));
 	}
 
@@ -35,6 +39,14 @@ const SearchForm: React.FC = (): JSX.Element => {
 
 	function onInputToggle () {
 		setIsInputExpanded(value => !value);
+		setValue('searchTerm', '');
+		setFilterOpen(false);
+		setFeatures([]);
+	}
+
+	function handleFilterClick (e: React.MouseEvent<HTMLSpanElement>) {
+		e.stopPropagation();
+		setFilterOpen(value => !value);
 		setValue('searchTerm', '');
 	}
 
@@ -50,7 +62,16 @@ const SearchForm: React.FC = (): JSX.Element => {
 									 placeholder="Search places..."
 									 onChange={handleSearch}
 									 name="searchTerm"/>
-						<span className="text-primary absolute top-4 right-3 cursor-pointer" onClick={onInputToggle}>
+						<span className="text-primary absolute top-4 right-3 cursor-pointer flex" onClick={onInputToggle}>
+							<span className="relative" onClick={(e) => handleFilterClick(e)}>
+								{!!features.length && <div className="bg-red-700 rounded-full w-2 h-2 absolute top-0 right-0"/>}
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+										 stroke="currentColor"
+										 className="w-6 h-6">
+									<path strokeLinecap="round" strokeLinejoin="round"
+												d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/>
+								</svg>
+							</span>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
 								 stroke="currentColor"
 								 className="w-6 h-6">
@@ -73,6 +94,12 @@ const SearchForm: React.FC = (): JSX.Element => {
                     className="w-1/3 z-50 w-full absolute border l-50 t-50 rounded-2xl p-3">
                     Nothing found...
                 </div>
+						}
+						{filterOpen && <div
+                className={`w-1/3 z-50 w-full absolute border l-50 t-50 rounded-2xl p-3 ${theme}`}>
+                <Features onChange={setFeatures} selectedFeatures={features}
+                          containerClassName="md:grid-cols-2 lg:grid-cols-2"/>
+            </div>
 						}
 					</div>
 				</div>

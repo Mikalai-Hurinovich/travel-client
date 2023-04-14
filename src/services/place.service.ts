@@ -7,8 +7,12 @@ async function getPlaceById (placeId: string): Promise<IPlace> {
 	return res.data;
 }
 
-async function searchPlaces (term: string, limit: number = 10): Promise<IPlace[]> {
-	const res = await axios.get(`/places/search?search=${term}&limit=${limit}`);
+async function searchPlaces (searchTerm: string, searchLimit: number = 10, searchFeatures: string[]): Promise<IPlace[]> {
+	const res = await axios.post(`/places/search`, {
+		search: searchTerm,
+		limit: searchLimit,
+		features: searchFeatures,
+	});
 	return res.data;
 }
 

@@ -51,8 +51,8 @@ const Bookings: React.FC = (): JSX.Element => {
 	}
 
 	return (
-		<>
-			<div className="mt-5">
+		<div className="flex flex-col">
+			<div className="mt-5 w-2/3 self-center">
 				{(!!bookings.length && !isLoading) && bookings.map(booking =>
 					<Booking key={booking._id} booking={booking} deleteBooking={handleDeleteBooking}/>)}
 				{!!bookings.length && <div className="mt-4 flex justify-center">
@@ -66,7 +66,7 @@ const Bookings: React.FC = (): JSX.Element => {
             <button className="self-start" onClick={() => handleNavigateHome()}>Start Searching</button>
         </div>}
 			</div>
-		</>
+		</div>
 	);
 };
 
