@@ -1,12 +1,20 @@
 import React, { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import cn from 'classnames';
 
 interface IFeatures {
 	selectedFeatures: string[],
 	onChange?: Dispatch<SetStateAction<string[]>>,
-	readonly?: boolean
+	readonly?: boolean,
+	containerClassName?: string
 }
 
-const Features: React.FC<IFeatures> = ({selectedFeatures, onChange, readonly = false}): JSX.Element => {
+const Features: React.FC<IFeatures> = (
+	{
+		selectedFeatures,
+		containerClassName,
+		onChange,
+		readonly = false
+	}): JSX.Element => {
 	function handleClick (e: ChangeEvent<HTMLInputElement>) {
 		const {id, checked} = e.target;
 		if (!readonly && onChange) {
@@ -22,7 +30,7 @@ const Features: React.FC<IFeatures> = ({selectedFeatures, onChange, readonly = f
 	}
 
 	return (
-		<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2 text-primary">
+		<div className={cn('grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2 text-primary' + containerClassName)}>
 			{(readonly && isFeatureSelected('kitchen') || !readonly) &&
           <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 border border-primary">
               <label className="sr-only" htmlFor="kitchen">Kitchen</label>
@@ -73,18 +81,18 @@ const Features: React.FC<IFeatures> = ({selectedFeatures, onChange, readonly = f
               </svg>
               <span>Workspace</span>
           </div>}
-			{(readonly && isFeatureSelected('shopping') || !readonly) &&
+			{(readonly && isFeatureSelected('shops') || !readonly) &&
           <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 border border-primary">
-              <label className="sr-only" htmlFor="shopping">shopping</label>
+              <label className="sr-only" htmlFor="shops">shops</label>
 						{!readonly &&
-                <input checked={isFeatureSelected('shopping')} className="mr-1" type="checkbox" id="shopping"
+                <input checked={isFeatureSelected('shops')} className="mr-1" type="checkbox" id="shops"
                        onChange={(e) => handleClick(e)}/>}
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                    stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round"
                         d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
               </svg>
-              <span>Shopping</span>
+              <span>Shops</span>
           </div>}
 			{(readonly && isFeatureSelected('ac') || !readonly) &&
           <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 border border-primary">
