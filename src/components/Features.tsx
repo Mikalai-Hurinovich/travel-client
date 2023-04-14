@@ -30,7 +30,7 @@ const Features: React.FC<IFeatures> = (
 	}
 
 	return (
-		<div className={cn('grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2 text-primary' + containerClassName)}>
+		<div className={cn('grid gap-2 mt-2 text-primary' + containerClassName)}>
 			{(readonly && isFeatureSelected('kitchen') || !readonly) &&
           <div className="flex items-center border border-gray-300 rounded-2xl px-3 py-2 gap-2 border border-primary">
               <label className="sr-only" htmlFor="kitchen">Kitchen</label>
