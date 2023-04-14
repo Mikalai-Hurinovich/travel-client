@@ -121,7 +121,8 @@ const PlaceDetails: React.FC = (): JSX.Element => {
 				</div>
 			</div>
 			<div className="w-2/3"><h2 className="font-bold text-lg mt-2">Features</h2>
-				<Features selectedFeatures={place.features} readonly/>
+				<Features selectedFeatures={place.features} readonly
+									containerClassName="grid-cols-2 md:grid-cols-4 lg:grid-cols-4"/>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div className="flex flex-col">
 						<h2 className="font-bold text-lg mt-2">Description</h2>

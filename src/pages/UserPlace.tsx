@@ -200,7 +200,8 @@ const UserPlace: React.FC = (): JSX.Element => {
 									onChange={handleFormFieldChange}/>
 				{getInputDescription('Features',
 					'Choose some features from the list below')}
-				<Features onChange={setFeatures} selectedFeatures={features}/>
+				<Features onChange={setFeatures} selectedFeatures={features}
+									containerClassName="grid-cols-2 md:grid-cols-4 lg:grid-cols-4"/>
 				<div>
 					<Input header="Price"
 								 description="Here you can add a price per night in your place"

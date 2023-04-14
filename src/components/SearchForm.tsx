@@ -98,7 +98,7 @@ const SearchForm: React.FC = (): JSX.Element => {
 						{filterOpen && <div
                 className={`w-1/3 z-50 w-full absolute border l-50 t-50 rounded-2xl p-3 ${theme}`}>
                 <Features onChange={setFeatures} selectedFeatures={features}
-                          containerClassName="md:grid-cols-2 lg:grid-cols-2"/>
+                          containerClassName="grid-cols-2 md:grid-cols-2 lg:grid-cols-2"/>
             </div>
 						}
 					</div>
